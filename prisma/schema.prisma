@@ -1,0 +1,114 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Dosen {
+  id        String   @id @default(uuid())
+  nip       String   @unique
+  nama      String
+  email     String   @unique
+  telepon   String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  pengampu DosenMataKuliah[]
+  jadwal   Jadwal[]
+
+  @@map("dosen")
+}
+
+model Mahasiswa {
+  id        String   @id @default(uuid())
+  nim       String   @unique
+  nama      String
+  email     String   @unique
+  jurusan   String
+  semester  Int
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  krs KartuRencanaStudi[]
+
+  @@map("mahasiswa")
+}
+
+model MataKuliah {
+  id          String   @id @default(uuid())
+  kode        String   @unique
+  nama        String
+  sks         Int
+  semester    Int
+  deskripsi   String?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  pengampu DosenMataKuliah[]
+  jadwal   Jadwal[]
+  krs      KartuRencanaStudi[]
+
+  @@map("mata_kuliah")
+}
+
+model DosenMataKuliah {
+  id           String      @id @default(uuid())
+  dosenId      String      @map("dosen_id")
+  mataKuliahId String      @map("mata_kuliah_id")
+  tahunAjaran  String      @map("tahun_ajaran") // e.g., "2024/2025"
+  semester     String      // Ganjil/Genap
+  createdAt    DateTime    @default(now()) @map("created_at")
+
+  // Relations
+  dosen        Dosen       @relation(fields: [dosenId], references: [id], onDelete: Cascade)
+  mataKuliah   MataKuliah  @relation(fields: [mataKuliahId], references: [id], onDelete: Cascade)
+
+  @@unique([dosenId, mataKuliahId, tahunAjaran, semester])
+  @@map("dosen_mata_kuliah")
+}
+
+model Jadwal {
+  id           String      @id @default(uuid())
+  mataKuliahId String      @map("mata_kuliah_id")
+  dosenId      String      @map("dosen_id")
+  hari         String      // Senin, Selasa, Rabu, Kamis, Jumat
+  jamMulai     String      @map("jam_mulai") // Format: "08:00"
+  jamSelesai   String      @map("jam_selesai") // Format: "10:00"
+  ruangan      String
+  semester     String      // Ganjil/Genap
+  tahunAjaran  String      @map("tahun_ajaran")
+  createdAt    DateTime    @default(now()) @map("created_at")
+  updatedAt    DateTime    @updatedAt @map("updated_at")
+
+  // Relations
+  mataKuliah   MataKuliah  @relation(fields: [mataKuliahId], references: [id], onDelete: Cascade)
+  dosen        Dosen       @relation(fields: [dosenId], references: [id], onDelete: Cascade)
+
+  @@unique([mataKuliahId, hari, jamMulai, tahunAjaran, semester])
+  @@map("jadwal")
+}
+
+model KartuRencanaStudi {
+  id           String      @id @default(uuid())
+  mahasiswaId  String      @map("mahasiswa_id")
+  mataKuliahId String      @map("mata_kuliah_id")
+  tahunAjaran  String      @map("tahun_ajaran")
+  semester     String
+  status       String      @default("AKTIF") // AKTIF, LULUS, MENGULANG, DROP
+  nilai        String?     // A, B+, B, C+, C, D, E
+  createdAt    DateTime    @default(now()) @map("created_at")
+  updatedAt    DateTime    @updatedAt @map("updated_at")
+
+  // Relations
+  mahasiswa    Mahasiswa   @relation(fields: [mahasiswaId], references: [id], onDelete: Cascade)
+  mataKuliah   MataKuliah  @relation(fields: [mataKuliahId], references: [id], onDelete: Cascade)
+
+  @@unique([mahasiswaId, mataKuliahId, tahunAjaran, semester])
+  @@map("kartu_rencana_studi")
+}
