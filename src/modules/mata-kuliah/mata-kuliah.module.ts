@@ -4,6 +4,7 @@ import { MataKuliahController } from './mata-kuliah.controller';
 
 @Module({
   providers: [MataKuliahService],
-  controllers: [MataKuliahController]
+  controllers: [MataKuliahController],
+  exports: [MataKuliahService],
 })
 export class MataKuliahModule {}
