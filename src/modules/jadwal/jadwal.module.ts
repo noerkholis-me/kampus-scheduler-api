@@ -4,6 +4,7 @@ import { JadwalController } from './jadwal.controller';
 
 @Module({
   providers: [JadwalService],
-  controllers: [JadwalController]
+  controllers: [JadwalController],
+  exports: [JadwalService],
 })
 export class JadwalModule {}
