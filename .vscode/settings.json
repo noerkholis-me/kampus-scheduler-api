@@ -31,5 +31,7 @@
     "javascriptreact",
     "typescript",
     "typescriptreact"
-  ]
+  ],
+  "typescript.tsserver.maxTsServerMemory": 1024,
+  "git.autofetch": false
 }

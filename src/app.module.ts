@@ -5,6 +5,7 @@ import { MahasiswaModule } from './modules/mahasiswa/mahasiswa.module';
 import { MataKuliahModule } from './modules/mata-kuliah/mata-kuliah.module';
 import { JadwalModule } from './modules/jadwal/jadwal.module';
 import { KrsModule } from './modules/krs/krs.module';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { KrsModule } from './modules/krs/krs.module';
       isGlobal: true,
       envFilePath: '.env',
     }),
+    PrismaModule,
     DosenModule,
     MahasiswaModule,
     MataKuliahModule,

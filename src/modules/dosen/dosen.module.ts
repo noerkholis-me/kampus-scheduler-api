@@ -4,6 +4,7 @@ import { DosenController } from './dosen.controller';
 
 @Module({
   providers: [DosenService],
-  controllers: [DosenController]
+  controllers: [DosenController],
+  exports: [DosenService]
 })
 export class DosenModule {}
