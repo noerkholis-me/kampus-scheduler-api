@@ -48,7 +48,7 @@ export class DosenController {
   }
 
   @Patch(':id')
-  @ApiOperation({ description: 'Update dosen' })
+  @ApiOperation({ summary: 'Update dosen by ID' })
   @ApiResponse({ status: 204, description: 'Dosen update successfully' })
   @ApiResponse({ status: 409, description: 'NIP or email already exists' })
   @ApiResponse({ status: 404, description: 'Dosen not found' })
@@ -57,7 +57,7 @@ export class DosenController {
   }
 
   @Delete(':id')
-  @ApiOperation({ description: 'Delete dosen' })
+  @ApiOperation({ summary: 'Delete dosen by ID' })
   @ApiResponse({ status: 204, description: 'Dosen deleted successfully' })
   @ApiResponse({ status: 404, description: 'Dosen not found' })
   remove(@Param('id') id: string) {
